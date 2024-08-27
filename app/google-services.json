@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257578302046",
+    "project_id": "elenchosbd",
+    "storage_bucket": "elenchosbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257578302046:android:3b6e949893ca934b8d12cf",
+        "android_client_info": {
+          "package_name": "com.app.elenchos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjdruHMFV9vimmhTKsQBjEPAmF11uJvo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
