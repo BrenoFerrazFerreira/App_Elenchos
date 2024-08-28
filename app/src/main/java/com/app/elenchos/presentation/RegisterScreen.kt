@@ -54,7 +54,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
         )
 
         Image(
-            painter = painterResource(id = R.drawable.logo), // Substitua pelo recurso da sua logo
+            painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
             modifier = Modifier
                 .size(120.dp)
