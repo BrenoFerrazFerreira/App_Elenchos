@@ -9,22 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.elenchos.R
+//import com.app.elenchos.presentation.blocker.checkAndBlockApps
+import com.app.elenchos.presentation.blockertest.checkAndBlockApps
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivitiesScreen(onNavigateBack: () -> Unit) {
+    val context = LocalContext.current
     val activities = listOf(
-        ActivityItem("Leitura", R.drawable.ic_leitura, (0..100).random()),
-        ActivityItem("Exercício Físico", R.drawable.ic_exercicio, (0..100).random()),
-        ActivityItem("Meditação", R.drawable.ic_meditacao, (0..100).random()),
-        ActivityItem("Lazer", R.drawable.ic_lazer, (0..100).random()),
-        ActivityItem("Outros", R.drawable.ic_outros, (0..100).random())
+        ActivityStatus("Leitura", R.drawable.ic_leitura, (0..100).random()),
+        ActivityStatus("Exercício Físico", R.drawable.ic_exercicio, (0..100).random()),
+        ActivityStatus("Meditação", R.drawable.ic_meditacao, (0..100).random()),
+        ActivityStatus("Lazer", R.drawable.ic_lazer, (0..100).random()),
+        ActivityStatus("Outros", R.drawable.ic_outros, (0..100).random())
     )
+
+    checkAndBlockApps(context, activities)
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         SmallTopAppBar(
@@ -53,7 +59,7 @@ fun ActivitiesScreen(onNavigateBack: () -> Unit) {
 }
 
 @Composable
-fun ActivityItemView(activity: ActivityItem) {
+fun ActivityItemView(activity: ActivityStatus) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -79,4 +85,4 @@ fun ActivityItemView(activity: ActivityItem) {
     }
 }
 
-data class ActivityItem(val name: String, val iconRes: Int, val percentage: Int)
+data class ActivityStatus(val name: String, val iconRes: Int, val percentage: Int)
