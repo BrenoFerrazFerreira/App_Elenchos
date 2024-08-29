@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
-import com.app.elenchos.presentation.atividades.ActivityStatus
+/*import com.app.elenchos.presentation.atividades.ActivityStatus
 
 fun checkAndBlockApps(context: Context, activities: List<ActivityStatus>) {
     val totalProgress = activities.sumOf { it.percentage }
@@ -39,4 +39,4 @@ fun blockSocialApps(context: Context) {
     }
 
     Toast.makeText(context, "Você não pode acessar essas redes sociais até atingir sua meta diária.", Toast.LENGTH_LONG).show()
-}
+}*/

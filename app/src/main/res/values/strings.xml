@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Elenchos</string>
+    <string name="accessibility_service_description">Descrição do serviço de acessibilidade</string>
 </resources>

@@ -66,6 +66,7 @@ dependencies {
     /*implementation(libs.androidx.ui.text.google.fonts)*/
     implementation("androidx.compose.ui:ui:1.5.0")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.5.0")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

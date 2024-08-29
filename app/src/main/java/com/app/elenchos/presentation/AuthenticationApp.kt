@@ -8,9 +8,7 @@ import androidx.compose.runtime.setValue
 import com.app.elenchos.presentation.login.LoginScreen
 import com.app.elenchos.presentation.register.RegisterScreen
 import com.app.elenchos.presentation.home.HomeScreen
-import com.app.elenchos.presentation.user.ProfileScreen
 import com.app.elenchos.presentation.atividades.ActivitiesScreen
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AuthenticationApp() {
@@ -21,17 +19,25 @@ fun AuthenticationApp() {
             onNavigateToRegister = { currentScreen = "Register" },
             onNavigateToHome = { currentScreen = "Home" }
         )
+
         "Register" -> RegisterScreen(onNavigateToLogin = { currentScreen = "Login" })
         "Home" -> HomeScreen(
             onProfileClick = { currentScreen = "User" },
-            onActivitiesClick = { currentScreen = "Activity" }
+            onActivitiesClick = { currentScreen = "Activity" },
+            onNavigateToHome = { currentScreen = "Home" }
         )
+
         "User" -> ProfileScreen(
             onNavigateToHome = { currentScreen = "Home" },
-            onNavigateToLogin = { currentScreen = "Login"}
+            onNavigateToLogin = { currentScreen = "Login" },
+            onProfileClick = { currentScreen = "User" },
+            onActivitiesClick = { currentScreen = "Activity" }
         )
+
         "Activity" -> ActivitiesScreen(
-            onNavigateBack = { currentScreen = "Home" }
+            onNavigateToHome = { currentScreen = "Home" },
+            onProfileClick = { currentScreen = "User" },
+            onActivitiesClick = { currentScreen = "Activity" }
         )
     }
 }
