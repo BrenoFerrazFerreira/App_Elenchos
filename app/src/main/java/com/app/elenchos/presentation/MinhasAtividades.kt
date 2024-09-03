@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.elenchos.R
+import com.app.elenchos.presentation.checkAndBlockApps
 //import com.app.elenchos.presentation.blocker.checkAndBlockApps
-import com.app.elenchos.presentation.blockertest.checkAndBlockApps
+//import com.app.elenchos.presentation.blockertest.checkAndBlockApps
 import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository
+import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository.getActivities
 import com.app.elenchos.presentation.repository.activityrepo.ActivityStatus
 import kotlinx.coroutines.launch
 
@@ -37,16 +40,7 @@ fun ActivitiesScreen(
     onActivitiesClick: () -> Unit
 ) {
     val context = LocalContext.current
-
-    val activities = listOf(
-        ActivityStatus("Leitura", R.drawable.ic_leitura, (0..100).random()),
-        ActivityStatus("Exercício Físico", R.drawable.ic_exercicio, (0..100).random()),
-        ActivityStatus("Meditação", R.drawable.ic_meditacao, (0..100).random()),
-        ActivityStatus("Lazer", R.drawable.ic_lazer, (0..100).random()),
-        ActivityStatus("Outros", R.drawable.ic_outros, (0..100).random())
-    )
-
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val activities = remember { generateRandomActivities() } // Gera as atividades com porcentagens aleatórias
     val scope = rememberCoroutineScope()
 
     // Atualiza as atividades no repositório
@@ -54,6 +48,9 @@ fun ActivitiesScreen(
 
     // Chama a função de bloqueio
     checkAndBlockApps(context, activities)
+
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -163,7 +160,7 @@ fun ActivitiesScreen(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(activities) { activity ->
+                    items(getActivities()) { activity ->
                         ActivityItemView(activity)
                     }
                 }
@@ -201,4 +198,14 @@ fun ActivityItemView(activity: ActivityStatus) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = "${activity.percentage}%", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
+}
+
+fun generateRandomActivities(): List<ActivityStatus> {
+    return listOf(
+        ActivityStatus("Leitura", R.drawable.ic_leitura, (0..100).random()),
+        ActivityStatus("Exercício Físico", R.drawable.ic_exercicio, (0..100).random()),
+        ActivityStatus("Meditação", R.drawable.ic_meditacao, (0..100).random()),
+        ActivityStatus("Lazer", R.drawable.ic_lazer, (0..100).random()),
+        ActivityStatus("Outros", R.drawable.ic_outros, (0..100).random())
+    )
 }

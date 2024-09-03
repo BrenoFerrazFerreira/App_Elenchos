@@ -1,4 +1,4 @@
-package com.app.elenchos.presentation.blockertest
+package com.app.elenchos.presentation
 
 import android.app.ActivityManager
 import android.app.AppOpsManager
@@ -15,6 +15,8 @@ import java.util.TreeMap
 //import com.app.elenchos.presentation.atividades.ActivityStatus
 import com.app.elenchos.presentation.repository.activityrepo.ActivityStatus
 import android.provider.Settings
+import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository
+
 //import com.app.elenchos.presentation.repository.activityrepo.ActivityStatus
 
 
@@ -47,15 +49,45 @@ fun showHomeScreen(context: Context) {
     context.startActivity(startMain)
 }
 
+//fun checkAndBlockApps(context: Context, activities: List<ActivityStatus>) {
+//    if (!hasUsageStatsPermission(context)) {
+//        requestUsageAccessPermission(context)
+//        return
+//    }
+//
+//    val totalPercentage = ActivityRepository.getTotalPercentage()
+//    Toast.makeText(context, "Total Percentage: $totalPercentage", Toast.LENGTH_SHORT).show()
+//
+//    if (totalPercentage < 700) {
+//        Toast.makeText(context, "Total Percentage is less than 700", Toast.LENGTH_SHORT).show()
+//        val blockedApps = listOf(
+//            "com.whatsapp",
+//            "com.instagram.android",
+//            "com.facebook.katana",
+//            "com.zhiliaoapp.musically", // TikTok
+//            "com.google.android.apps.maps"
+//        )
+//
+//        val currentApp = getForegroundApp(context)
+//        Toast.makeText(context, "Current App: $currentApp", Toast.LENGTH_SHORT).show()
+//
+//        if (blockedApps.contains("com.google.android.apps.maps")) {
+//            showHomeScreen(context)
+//            Toast.makeText(context, "Você não pode acessar estas redes sociais até atingir sua meta diária.", Toast.LENGTH_LONG).show()
+//        }
+//    } else {
+//        Toast.makeText(context, "Parabéns, você atingiu sua meta diária! Redes sociais liberadas.", Toast.LENGTH_SHORT).show()
+//    }
+//}
 fun checkAndBlockApps(context: Context, activities: List<ActivityStatus>) {
     if (!hasUsageStatsPermission(context)) {
         requestUsageAccessPermission(context)
         return
     }
 
-    val allActivitiesCompleted = activities.all { it.percentage == 100 }
+    val totalPercentage = ActivityRepository.getTotalPercentage()
 
-    if (!allActivitiesCompleted) {
+    if (totalPercentage < 700) {
         val blockedApps = listOf(
             "com.whatsapp",
             "com.instagram.android",
@@ -65,14 +97,17 @@ fun checkAndBlockApps(context: Context, activities: List<ActivityStatus>) {
         )
 
         val currentApp = getForegroundApp(context)
-        if (blockedApps.contains(currentApp)) {
-            showHomeScreen(context)
+        if (blockedApps.contains(currentApp) && currentApp != context.packageName) {
+            val lockIntent = Intent(context, LockScreen::class.java)
+            lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(lockIntent)
             Toast.makeText(context, "Você não pode acessar estas redes sociais até atingir sua meta diária.", Toast.LENGTH_LONG).show()
         }
     } else {
-        Toast.makeText(context, "Parabéns, você atingiu sua meta diária!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Parabéns, você atingiu sua meta diária! Redes sociais liberadas.", Toast.LENGTH_SHORT).show()
     }
 }
+
 
 fun hasUsageStatsPermission(context: Context): Boolean {
     val usm = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager

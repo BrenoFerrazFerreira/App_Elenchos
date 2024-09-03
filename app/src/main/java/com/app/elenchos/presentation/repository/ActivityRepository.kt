@@ -20,4 +20,8 @@ object ActivityRepository {
     fun getActivities(): List<ActivityStatus> {
         return activities
     }
+
+    fun getTotalPercentage(): Int {
+        return activities.sumOf { it.percentage }
+    }
 }
