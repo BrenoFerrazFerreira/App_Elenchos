@@ -117,7 +117,7 @@ fun RankingScreen(
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    selected = false,
+                    selected = true,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.EmojiEvents,
@@ -134,8 +134,7 @@ fun RankingScreen(
                     label = {
                         Text(
                             text = "Notícias",
-                            color = Color(0xFFb7adf6),
-                            fontWeight = FontWeight.Bold
+                            color = Color(0xFFb7adf6)
                         )
                     },
                     selected = false,

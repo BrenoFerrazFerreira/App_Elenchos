@@ -53,5 +53,13 @@ fun AuthenticationApp() {
             onNavigateToRanking = { currentScreen = "Ranking" },
             onNavigateToNews = { currentScreen = "News" }
         )
+
+        "News" -> NewsScreen(
+            onNavigateToHome = { currentScreen = "Home" },
+            onProfileClick = { currentScreen = "User" },
+            onActivitiesClick = { currentScreen = "Activity" },
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" }
+        )
     }
 }

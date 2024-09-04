@@ -119,7 +119,7 @@ fun ActivitiesScreen(
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    selected = false,
+                    selected = true,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.List,

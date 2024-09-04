@@ -107,7 +107,7 @@ fun HomeScreen(
                 Divider()
                 NavigationDrawerItem(
                     label = { Text(text = "Tela inicial", color = Color(0xFFb7adf6), fontWeight = FontWeight.Bold) },
-                    selected = false,
+                    selected = true,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Home,
@@ -174,8 +174,7 @@ fun HomeScreen(
                     label = {
                         Text(
                             text = "Notícias",
-                            color = Color(0xFFb7adf6),
-                            fontWeight = FontWeight.Bold
+                            color = Color(0xFFb7adf6)
                         )
                     },
                     selected = false,

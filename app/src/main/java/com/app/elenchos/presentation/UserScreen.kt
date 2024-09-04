@@ -129,7 +129,7 @@ fun ProfileScreen(
                 )
                 NavigationDrawerItem(
                     label = { Text(text = "Perfil", color = Color(0xFFb7adf6), fontWeight = FontWeight.Bold) },
-                    selected = false,
+                    selected = true,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.AccountCircle,
