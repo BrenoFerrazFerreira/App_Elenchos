@@ -1,22 +1,18 @@
 package com.app.elenchos.presentation
 
-import android.content.Context
-import android.content.Intent
-
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
-import com.app.elenchos.R
-import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository
-
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-
+import com.app.elenchos.R
+import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository
 
 class AppMonitorService : Service() {
 
@@ -24,17 +20,19 @@ class AppMonitorService : Service() {
         Log.d("AppMonitorService", "Service started")
         startForegroundService()
 
-        // Start background monitoring
+        // Inicia o monitoramento em segundo plano
         Thread {
             while (true) {
                 val currentApp = getForegroundApp(this)
                 Log.d("AppMonitorService", "Current foreground app: $currentApp")
-                //if (shouldBlockApp(currentApp)) {
-                if (shouldBlockApp(currentApp) || currentApp == "com.google.android.apps.nexuslauncher") {
+
+                // Verifica se o app atual deve ser bloqueado
+                if (shouldBlockApp(currentApp)) {
                     Log.d("AppMonitorService", "Blocking app: $currentApp")
                     blockApp(currentApp)
                 }
-                Thread.sleep(1000) // Check every 1 second (adjust as needed)
+
+                Thread.sleep(1000) // Verifica a cada 1 segundo (ajuste conforme necessário)
             }
         }.start()
 
@@ -55,7 +53,7 @@ class AppMonitorService : Service() {
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("App Monitor")
             .setContentText("Monitoring apps...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your app's icon
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Substitua pelo ícone do seu app
             .build()
 
         startForeground(1, notification)
@@ -63,6 +61,7 @@ class AppMonitorService : Service() {
     }
 
     private fun shouldBlockApp(currentApp: String): Boolean {
+        // Lista de pacotes de aplicativos que você deseja bloquear
         val blockedApps = listOf(
             "com.whatsapp",
             "com.instagram.android",
@@ -70,30 +69,29 @@ class AppMonitorService : Service() {
             "com.zhiliaoapp.musically", // TikTok
             "com.google.android.apps.maps"
         )
+
         val totalPercentage = ActivityRepository.getTotalPercentage()
         Log.d("AppMonitorService", "Total activities percentage: $totalPercentage")
-        return blockedApps.contains(currentApp) && totalPercentage < 700
+
+        // Verifica se o app atual está na lista de bloqueados e se a porcentagem de atividades é menor que 60
+        return blockedApps.contains(currentApp) && totalPercentage < 60
     }
 
     private fun blockApp(currentApp: String) {
-        val totalPercentage = ActivityRepository.getTotalPercentage()
-        Log.d("AppMonitorService", "Blocking app: $currentApp with percentage: $totalPercentage")
-        if (totalPercentage < 700) {
-            val lockIntent = Intent(this, LockScreen::class.java)
-            lockIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-            )
-            startActivity(lockIntent)
-        }
+        val lockIntent = Intent(this, LockScreen::class.java)
+        lockIntent.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+        )
+        startActivity(lockIntent)
     }
 
     private fun getForegroundApp(context: Context): String {
         val usageStatsManager =
             context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val endTime = System.currentTimeMillis()
-        val beginTime = endTime - 1000 * 60 // Look at usage in the last minute
+        val beginTime = endTime - 1000 * 60 // Olha para o uso no último minuto
 
         val stats =
             usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)

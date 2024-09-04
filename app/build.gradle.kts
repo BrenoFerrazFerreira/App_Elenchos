@@ -72,6 +72,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.0")
     implementation(libs.androidx.core.ktx.v1101)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

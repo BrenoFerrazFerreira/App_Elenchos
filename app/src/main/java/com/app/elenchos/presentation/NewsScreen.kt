@@ -1,64 +1,40 @@
-package com.app.elenchos.presentation.atividades
+package com.app.elenchos.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.elenchos.R
-import com.app.elenchos.presentation.checkAndBlockApps
-//import com.app.elenchos.presentation.blocker.checkAndBlockApps
-//import com.app.elenchos.presentation.blockertest.checkAndBlockApps
-import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository
-import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository.getActivities
-import com.app.elenchos.presentation.repository.activityrepo.ActivityRepository.getTotalPercentage
-import com.app.elenchos.presentation.repository.activityrepo.ActivityStatus
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Menu
 import kotlinx.coroutines.launch
+
+data class NewsItem(
+    val title: String,
+    val category: String,
+    val description: String
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivitiesScreen(
+fun NewsScreen(
     onNavigateToHome: () -> Unit,
     onProfileClick: () -> Unit,
     onActivitiesClick: () -> Unit,
-    onNavigateToRanking: () -> Unit,
-    onNavigateToNews: () -> Unit
+    onNavigateToNews: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val activities = remember { generateRandomActivities() }
-    val scope = rememberCoroutineScope()
-
-    // Atualiza as atividades no repositório
-    ActivityRepository.updateActivities(activities)
-
-    // Chama a função de bloqueio
-    checkAndBlockApps(context, activities)
-
-    // Calcula o total das porcentagens após a atualização das atividades
-    val totalPercentage = ActivityRepository.getTotalPercentage()
-
+    val newsItems = generateNewsItems()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -76,7 +52,6 @@ fun ActivitiesScreen(
                         text = "Menu",
                         color = Color.White,
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
@@ -115,8 +90,7 @@ fun ActivitiesScreen(
                     label = {
                         Text(
                             text = "Minhas Atividades",
-                            color = Color(0xFFb7adf6),
-                            fontWeight = FontWeight.Bold
+                            color = Color(0xFFb7adf6)
                         )
                     },
                     selected = false,
@@ -130,26 +104,6 @@ fun ActivitiesScreen(
                     onClick = {
                         scope.launch { drawerState.close() }
                         onActivitiesClick()
-                    }
-                )
-                NavigationDrawerItem(
-                    label = {
-                        Text(
-                            text = "Veja o ranking",
-                            color = Color(0xFFb7adf6)
-                        )
-                    },
-                    selected = false,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.EmojiEvents,
-                            contentDescription = "lista",
-                            tint = Color(0xFFb7adf6)
-                        )
-                    },
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        onNavigateToRanking()
                     }
                 )
                 NavigationDrawerItem(
@@ -181,14 +135,13 @@ fun ActivitiesScreen(
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = "Minhas Atividades",
+                            text = "Notícias",
                             color = Color.White
                         )
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = Color(0xFFb7adf6),
-                        titleContentColor = Color.White,
-                        navigationIconContentColor = Color.White
+                        titleContentColor = Color.White
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -196,7 +149,8 @@ fun ActivitiesScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Rounded.Menu,
-                                contentDescription = "MenuButton"
+                                contentDescription = "MenuButton",
+                                tint = Color.White
                             )
                         }
                     }
@@ -207,25 +161,14 @@ fun ActivitiesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = "Total das porcentagens: $totalPercentage%",
-                    color = Color(0xFFb7adf6),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(getActivities()) { activity ->
-                        ActivityItemView(activity)
+                    items(newsItems) { newsItem ->
+                        NewsCard(newsItem)
                     }
                 }
             }
@@ -233,44 +176,48 @@ fun ActivitiesScreen(
     }
 }
 
-
 @Composable
-fun ActivityItemView(activity: ActivityStatus) {
-    Row(
+fun NewsCard(newsItem: NewsItem) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Image(
-            painter = painterResource(id = activity.iconRes),
-            contentDescription = activity.name,
-            modifier = Modifier.size(40.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .padding(16.dp)
         ) {
-            Text(text = activity.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            LinearProgressIndicator(
-                progress = activity.percentage / 100f,
-                color = Color(0xFFb7adf6),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp)
+            Text(
+                text = newsItem.title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFb7adf6)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = newsItem.category,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = newsItem.description,
+                fontSize = 14.sp,
+                color = Color.Gray
             )
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(text = "${activity.percentage}%", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
-fun generateRandomActivities(): List<ActivityStatus> {
+fun generateNewsItems(): List<NewsItem> {
     return listOf(
-        ActivityStatus("Leitura", R.drawable.ic_leitura, (0..100).random()),
-        ActivityStatus("Exercício Físico", R.drawable.ic_exercicio, (0..100).random()),
-        ActivityStatus("Meditação", R.drawable.ic_meditacao, (0..100).random()),
-        ActivityStatus("Lazer", R.drawable.ic_lazer, (0..100).random()),
-        ActivityStatus("Outros", R.drawable.ic_outros, (0..100).random())
+        NewsItem("Leitura Recomendada", "Leitura", "Descubra os melhores livros para ler nesta semana."),
+        NewsItem("Últimas em Esportes", "Esportes", "As notícias mais quentes do mundo dos esportes."),
+        NewsItem("Meditação para Iniciantes", "Meditação", "Dicas e truques para começar a meditar."),
+        NewsItem("Eventos de Lazer", "Lazer", "Aproveite as melhores atividades de lazer deste mês."),
+        NewsItem("Notícias Recentes", "Geral", "Atualizações e eventos recentes que você deve saber."),
+        NewsItem("Curiosidades Sobre a Ciência", "Ciência", "Fatos e descobertas científicas interessantes.")
     )
 }

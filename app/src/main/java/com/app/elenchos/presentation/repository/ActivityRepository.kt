@@ -22,6 +22,9 @@ object ActivityRepository {
     }
 
     fun getTotalPercentage(): Int {
-        return activities.sumOf { it.percentage }
+        // Calcula a soma das porcentagens de todas as atividades
+        var soma = activities.sumOf { it.percentage }
+        var resultado = soma * 100 / 500
+        return resultado
     }
 }

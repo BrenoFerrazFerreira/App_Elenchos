@@ -24,20 +24,34 @@ fun AuthenticationApp() {
         "Home" -> HomeScreen(
             onProfileClick = { currentScreen = "User" },
             onActivitiesClick = { currentScreen = "Activity" },
-            onNavigateToHome = { currentScreen = "Home" }
+            onNavigateToHome = { currentScreen = "Home" },
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" }
         )
 
         "User" -> ProfileScreen(
             onNavigateToHome = { currentScreen = "Home" },
             onNavigateToLogin = { currentScreen = "Login" },
             onProfileClick = { currentScreen = "User" },
-            onActivitiesClick = { currentScreen = "Activity" }
+            onActivitiesClick = { currentScreen = "Activity" },
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" }
         )
 
         "Activity" -> ActivitiesScreen(
             onNavigateToHome = { currentScreen = "Home" },
             onProfileClick = { currentScreen = "User" },
-            onActivitiesClick = { currentScreen = "Activity" }
+            onActivitiesClick = { currentScreen = "Activity" } ,
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" }
+        )
+
+        "Ranking" -> RankingScreen(
+            onNavigateToHome = { currentScreen = "Home" },
+            onProfileClick = { currentScreen = "User" },
+            onActivitiesClick = { currentScreen = "Activity" },
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" }
         )
     }
 }

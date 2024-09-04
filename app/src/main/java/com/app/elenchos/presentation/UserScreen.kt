@@ -8,7 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
@@ -69,7 +71,9 @@ fun ProfileScreen(
     onNavigateToHome: () -> Unit,
     onProfileClick: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    onActivitiesClick: () -> Unit
+    onActivitiesClick: () -> Unit,
+    onNavigateToRanking: () -> Unit,
+    onNavigateToNews: () -> Unit
 ) {
     val profilePicture: Painter = painterResource(id = R.drawable.iconefoca)
 
@@ -109,7 +113,7 @@ fun ProfileScreen(
                 }
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Home", color = Color(0xFFb7adf6)) },
+                    label = { Text(text = "Tela inicial", color = Color(0xFFb7adf6)) },
                     selected = false,
                     icon = {
                         Icon(
@@ -124,7 +128,7 @@ fun ProfileScreen(
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text(text = "Profile", color = Color(0xFFb7adf6)) },
+                    label = { Text(text = "Perfil", color = Color(0xFFb7adf6), fontWeight = FontWeight.Bold) },
                     selected = false,
                     icon = {
                         Icon(
@@ -151,6 +155,47 @@ fun ProfileScreen(
                     onClick = {
                         scope.launch { drawerState.close() }
                         onActivitiesClick()
+                    }
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "Veja o ranking",
+                            color = Color(0xFFb7adf6)
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.EmojiEvents,
+                            contentDescription = "lista",
+                            tint = Color(0xFFb7adf6)
+                        )
+                    },
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        onNavigateToRanking()
+                    }
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "Notícias",
+                            color = Color(0xFFb7adf6),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = "notícias",
+                            tint = Color(0xFFb7adf6)
+                        )
+                    },
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        onNavigateToNews()
                     }
                 )
             }
