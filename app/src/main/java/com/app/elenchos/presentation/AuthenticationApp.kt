@@ -26,7 +26,8 @@ fun AuthenticationApp() {
             onActivitiesClick = { currentScreen = "Activity" },
             onNavigateToHome = { currentScreen = "Home" },
             onNavigateToRanking = { currentScreen = "Ranking" },
-            onNavigateToNews = { currentScreen = "News" }
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" }
         )
 
         "User" -> ProfileScreen(
@@ -35,7 +36,8 @@ fun AuthenticationApp() {
             onProfileClick = { currentScreen = "User" },
             onActivitiesClick = { currentScreen = "Activity" },
             onNavigateToRanking = { currentScreen = "Ranking" },
-            onNavigateToNews = { currentScreen = "News" }
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" }
         )
 
         "Activity" -> ActivitiesScreen(
@@ -43,7 +45,8 @@ fun AuthenticationApp() {
             onProfileClick = { currentScreen = "User" },
             onActivitiesClick = { currentScreen = "Activity" } ,
             onNavigateToRanking = { currentScreen = "Ranking" },
-            onNavigateToNews = { currentScreen = "News" }
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" }
         )
 
         "Ranking" -> RankingScreen(
@@ -51,7 +54,8 @@ fun AuthenticationApp() {
             onProfileClick = { currentScreen = "User" },
             onActivitiesClick = { currentScreen = "Activity" },
             onNavigateToRanking = { currentScreen = "Ranking" },
-            onNavigateToNews = { currentScreen = "News" }
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" }
         )
 
         "News" -> NewsScreen(
@@ -59,7 +63,18 @@ fun AuthenticationApp() {
             onProfileClick = { currentScreen = "User" },
             onActivitiesClick = { currentScreen = "Activity" },
             onNavigateToRanking = { currentScreen = "Ranking" },
-            onNavigateToNews = { currentScreen = "News" }
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" }
+        )
+
+        "Reward" -> RewardsScreen(
+            onNavigateToHome = { currentScreen = "Home" },
+            onProfileClick = { currentScreen = "User" },
+            onActivitiesClick = { currentScreen = "Activity" },
+            onNavigateToRanking = { currentScreen = "Ranking" },
+            onNavigateToNews = { currentScreen = "News" },
+            onNavigateToReward = { currentScreen = "Reward" },
+            currentPoints = 50
         )
     }
 }

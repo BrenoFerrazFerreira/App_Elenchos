@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -38,7 +39,8 @@ fun RankingScreen(
     onProfileClick: () -> Unit,
     onActivitiesClick: () -> Unit,
     onNavigateToRanking: () -> Unit,
-    onNavigateToNews: () -> Unit
+    onNavigateToNews: () -> Unit,
+    onNavigateToReward: () -> Unit
 ) {
     val users = generateRandomUsers()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -148,6 +150,26 @@ fun RankingScreen(
                     onClick = {
                         scope.launch { drawerState.close() }
                         onNavigateToNews()
+                    }
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "Recompensas",
+                            color = Color(0xFFb7adf6)
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.CardGiftcard,
+                            contentDescription = "recompensas",
+                            tint = Color(0xFFb7adf6)
+                        )
+                    },
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        onNavigateToReward()
                     }
                 )
             }

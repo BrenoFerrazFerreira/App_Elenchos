@@ -1,90 +1,43 @@
-package com.app.elenchos.presentation.home
+package com.app.elenchos.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CardGiftcard
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.elenchos.R
-import com.app.elenchos.presentation.common.CustomButton
-import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Menu
 import kotlinx.coroutines.launch
 
-val firebaseAuth = FirebaseAuth.getInstance()
+data class RewardItem(
+    val title: String,
+    val description: String,
+    val pointsRequired: Int
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun RewardsScreen(
+    onNavigateToHome: () -> Unit,
     onProfileClick: () -> Unit,
     onActivitiesClick: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    onNavigateToRanking: () -> Unit,
     onNavigateToNews: () -> Unit,
-    onNavigateToReward: () -> Unit
+    onNavigateToRanking: () -> Unit,
+    onNavigateToReward: () -> Unit,
+    currentPoints: Int // Pontos atuais do usuário
 ) {
+    val rewardItems = generateRewardItems()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    val context = LocalContext.current
-
-    var userName by remember { mutableStateOf("Carregando...") }
-
-    LaunchedEffect(com.app.elenchos.presentation.firebaseAuth.currentUser) {
-        val user = com.app.elenchos.presentation.firebaseAuth.currentUser
-        userName = user?.displayName ?: "Nome não disponível"
-    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -102,14 +55,13 @@ fun HomeScreen(
                         text = "Menu",
                         color = Color.White,
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Tela inicial", color = Color(0xFFb7adf6), fontWeight = FontWeight.Bold) },
-                    selected = true,
+                    label = { Text(text = "Tela inicial", color = Color(0xFFb7adf6)) },
+                    selected = false,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Home,
@@ -138,7 +90,12 @@ fun HomeScreen(
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text(text = "Minhas Atividades", color = Color(0xFFb7adf6)) },
+                    label = {
+                        Text(
+                            text = "Minhas Atividades",
+                            color = Color(0xFFb7adf6)
+                        )
+                    },
                     selected = false,
                     icon = {
                         Icon(
@@ -163,7 +120,7 @@ fun HomeScreen(
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.EmojiEvents,
-                            contentDescription = "lista",
+                            contentDescription = "ranking",
                             tint = Color(0xFFb7adf6)
                         )
                     },
@@ -196,10 +153,11 @@ fun HomeScreen(
                     label = {
                         Text(
                             text = "Recompensas",
-                            color = Color(0xFFb7adf6)
+                            color = Color(0xFFb7adf6),
+                            fontWeight = FontWeight.Bold
                         )
                     },
-                    selected = false,
+                    selected = true,
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.CardGiftcard,
@@ -218,11 +176,16 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text(text = "Focus", fontWeight = FontWeight.Bold) },
+                    title = {
+                        Text(
+                            text = "Recompensas",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = Color(0xFFb7adf6),
-                        titleContentColor = Color.White,
-                        navigationIconContentColor = Color.White
+                        titleContentColor = Color.White
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -230,16 +193,8 @@ fun HomeScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Rounded.Menu,
-                                contentDescription = "MenuButton"
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Filled.Settings, // Use o ícone de configurações
-                                contentDescription = "Settings",
-                                tint = Color.White // Ajuste a cor do ícone conforme necessário
+                                contentDescription = "MenuButton",
+                                tint = Color.White
                             )
                         }
                     }
@@ -249,54 +204,72 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFFFFFFF))
                     .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .padding(16.dp)
             ) {
-                RoundImageWithShadow(
-                    image = painterResource(id = R.drawable.logo), // Substitua pelo ID da sua imagem
-                    imageSize = 200.dp, // Define o tamanho da imagem
-                    shadowColor = Color(0xFFb7adf6) // Define a cor da sombra
-                )
+                // Exibe os pontos atuais do usuário
                 Text(
-                    text = "Olá, ${userName}!",
+                    text = "Seus Pontos: $currentPoints",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFb7adf6),
-                    modifier = Modifier.padding(bottom = 24.dp, top = 24.dp)
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
-                CustomButton(text = "Meu Perfil", onClick = onProfileClick)
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomButton(text = "Minhas Atividades", onClick = onActivitiesClick)
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomButton(text = "Veja o ranking", onClick = onNavigateToRanking)
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomButton(text = "Notícias", onClick = onNavigateToNews)
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomButton(text = "Recompensas", onClick = onNavigateToReward)
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(rewardItems) { rewardItem ->
+                        RewardCard(rewardItem, currentPoints)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun RoundImageWithShadow(image: Painter, imageSize: Dp, shadowColor: Color) {
-    Box(
+fun RewardCard(rewardItem: RewardItem, currentPoints: Int) {
+    Card(
         modifier = Modifier
-            .size(imageSize)
-            .clip(CircleShape) // Garante que a sombra será circular
-            .background(shadowColor.copy(alpha = 0.7f)) // Sombra como fundo com opacidade
-            .shadow(10.dp, shape = CircleShape) // Sombra real aplicada
+            .fillMaxWidth()
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Image(
-            painter = image,
-            contentDescription = null,
+        Column(
             modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape), // Garante que a imagem também é circular
-            contentScale = ContentScale.Crop // Ajusta a escala da imagem para preencher o espaço
-        )
+                .padding(16.dp)
+        ) {
+            Text(
+                text = rewardItem.title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFb7adf6)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = rewardItem.description,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Pontos Necessários: ${rewardItem.pointsRequired}",
+                fontSize = 14.sp,
+                color = if (currentPoints >= rewardItem.pointsRequired) Color(0xFF00C853) else Color(0xFFD32F2F) // Verde se o usuário tiver pontos suficientes, vermelho caso contrário
+            )
+        }
     }
+}
+
+fun generateRewardItems(): List<RewardItem> {
+    return listOf(
+        RewardItem("Spotify Premium", "Assinatura de 1 mês de Spotify Premium.", 1000),
+        RewardItem("Gift Card de Jogo", "Gift card para compras em jogos.", 800),
+        RewardItem("Cupom de Desconto", "Cupom de 20% de desconto em compras online.", 500),
+        RewardItem("Netflix Premium", "Assinatura de 1 mês de Netflix Premium.", 1200),
+        RewardItem("Amazon Gift Card", "Gift card para compras na Amazon.", 900)
+    )
 }

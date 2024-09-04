@@ -37,7 +37,8 @@ fun NewsScreen(
     onProfileClick: () -> Unit,
     onActivitiesClick: () -> Unit,
     onNavigateToNews: () -> Unit,
-    onNavigateToRanking: () -> Unit
+    onNavigateToRanking: () -> Unit,
+    onNavigateToReward: () -> Unit
 ) {
     val newsItems = generateNewsItems()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -152,6 +153,26 @@ fun NewsScreen(
                     onClick = {
                         scope.launch { drawerState.close() }
                         onNavigateToNews()
+                    }
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "Recompensas",
+                            color = Color(0xFFb7adf6)
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.CardGiftcard,
+                            contentDescription = "recompensas",
+                            tint = Color(0xFFb7adf6)
+                        )
+                    },
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        onNavigateToReward()
                     }
                 )
             }
